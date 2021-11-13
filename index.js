@@ -23,6 +23,7 @@ async function run() {
         const database = client.db('motorBike');
         const serviceCollection = database.collection('services');
         const exploreCollection = database.collection('explores');
+        const purchaseCollection = database.collection('purchase');
 
         //get api 
         app.get('/services', async (req, res) => {
@@ -37,6 +38,23 @@ async function run() {
             const explores = await cursor.toArray();
             res.send(explores);
         });
+
+        app.get('/purchase', async (req, res) => {
+            const email = req.query.userEmail;
+            const query = {userEmail: email};
+            console.log(query);
+            const cursor = purchaseCollection.find(query);
+            const purchases = await cursor.toArray();
+            res.json(purchases)
+        })
+
+        // user purchese api post
+        app.post('/purchase', async (req, res) => {
+            const purchase = req.body;
+            const result = await purchaseCollection.insertOne(purchase)
+            console.log(purchase);
+            res.json(result)
+        })
         
         //post api 
         app.post('/explores', async(req, res) => {
