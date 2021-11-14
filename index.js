@@ -24,6 +24,7 @@ async function run() {
         const serviceCollection = database.collection('services');
         const exploreCollection = database.collection('explores');
         const purchaseCollection = database.collection('purchase');
+        const usersCollection =  database.collection('users')
 
         //get api 
         app.get('/services', async (req, res) => {
@@ -47,6 +48,24 @@ async function run() {
             const purchases = await cursor.toArray();
             res.json(purchases)
         })
+
+        // user data post api
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            console.log(result);
+            res.json(result);
+        });
+
+        app.put('/users', async (req, res) => {
+            const user = req.body;
+            console.log('put', user);
+            const filter = {email: user.email};
+            const options = {upsert: true};
+            const updateDoc = {$set: user};
+            const result = await usersCollection.updateOne(filter, updateDoc, options);
+            res.json(result);
+        }); 
 
         // user purchese api post
         app.post('/purchase', async (req, res) => {
