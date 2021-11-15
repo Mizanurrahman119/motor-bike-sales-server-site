@@ -25,12 +25,19 @@ async function run() {
         const exploreCollection = database.collection('explores');
         const purchaseCollection = database.collection('purchase');
         const usersCollection =  database.collection('users')
+        const offerCollection =  database.collection('offers')
 
         //get api 
         app.get('/services', async (req, res) => {
             const cursor =  serviceCollection.find({});
             const services = await cursor.toArray();
             res.send(services);
+        });
+
+        app.get('/offers', async (req, res) => {
+            const cursor =  offerCollection.find({});
+            const offers = await cursor.toArray();
+            res.send(offers);
         });
 
         // get api
@@ -98,6 +105,14 @@ async function run() {
         app.post('/explores', async(req, res) => {
             const explores = req.body;
             const result = await exploreCollection.insertOne(explores);
+            console.log(result);
+            res.json(result);
+        });
+
+        //post api 
+        app.post('/offers', async(req, res) => {
+            const offers = req.body;
+            const result = await offerCollection.insertOne(offers);
             console.log(result);
             res.json(result);
         });
